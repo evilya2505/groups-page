@@ -1,4 +1,7 @@
 .App {
     text-align: center;
-  }
+}
   
+.main {
+    max-width: 1400px;
+}
