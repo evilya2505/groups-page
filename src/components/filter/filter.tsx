@@ -1,13 +1,16 @@
 import { FormItem, NativeSelect } from "@vkontakte/vkui";
-import { IOption } from "../../utils/types";
+import { FilterOptions, IOption } from "../../utils/types";
 import { ChangeEventHandler } from "react";
 import React from "react";
 
 interface IFilterProps {
   title: string;
-  id: string;
+  id: "type" | "friends" | "avatarColor";
   data: IOption[];
-  onChange: (type: string) => void;
+  onChange: (
+    type: string,
+    optionName: "type" | "friends" | "avatarColor"
+  ) => void;
   initialState: string;
 }
 
@@ -21,8 +24,8 @@ const Filter: React.FC<IFilterProps> = ({
   const [value, setValue] = React.useState(initialState);
 
   React.useEffect(() => {
-    onChange(value);
-  }, [value]);
+    onChange(value, id);
+  }, [value, id]);
 
   function onFilterChange(newValue: string) {
     setValue(newValue);

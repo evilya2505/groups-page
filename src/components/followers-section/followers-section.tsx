@@ -1,6 +1,8 @@
 import { MiniInfoCell, UsersStack } from "@vkontakte/vkui";
 import { User } from "../../utils/types";
-import { defineSuffix } from "../../utils/utils";
+import { defineSuffix, defineSuffixFriends } from "../../utils/utils";
+
+import frollowersSectionStyles from "./followers-section.module.css";
 
 interface IFollowerSectionProps {
   followers: number;
@@ -14,7 +16,7 @@ const FollowersSection: React.FC<IFollowerSectionProps> = ({
   friends,
 }: IFollowerSectionProps): JSX.Element => {
   function onFriendsClick() {
-    console.log(id, friends);
+    console.log(id, friends, "открытие попапа");
   }
   return (
     <>
@@ -26,29 +28,29 @@ const FollowersSection: React.FC<IFollowerSectionProps> = ({
               style={{ cursor: "pointer" }}
               onClick={onFriendsClick}
               photos={[
-                "https://source.unsplash.com/featured/",
-                "https://source.unsplash.com/featured/",
-                "https://source.unsplash.com/featured/",
+                "https://picsum.photos/200",
+                "https://picsum.photos/200",
+                "https://picsum.photos/200",
               ]}
             />
           }
         >
           <div style={{ display: "flex" }}>
-            <p
+            <button
+              className={frollowersSectionStyles.button}
               onClick={onFriendsClick}
-              style={{ fontSize: "13px", margin: "0px", cursor: "pointer" }}
             >
-              {friends.length} друг ·
-            </p>
-            <p style={{ fontSize: "13px", margin: "0px" }}>
-              {`${followers} ${defineSuffix(followers)}`}
+              {friends.length} {defineSuffixFriends(friends.length)}
+            </button>
+            <p className={frollowersSectionStyles.text}>
+              · {`${followers} ${defineSuffix(followers)}`}
             </p>
           </div>
         </MiniInfoCell>
       ) : (
-        <p style={{ margin: "0px" }}>{`${followers} ${defineSuffix(
-          followers
-        )}`}</p>
+        <p
+          className={frollowersSectionStyles.text}
+        >{`${followers} ${defineSuffix(followers)}`}</p>
       )}
     </>
   );

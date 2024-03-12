@@ -1,31 +1,22 @@
 import React from "react";
-// import appStyles from "./app.module.css";
 import mockData from "../../utils/groups.json";
-import { IOption, GetGroupsResponse } from "../../utils/types";
-import {
-  View,
-  Panel,
-  PanelHeader,
-  AppRoot,
-  SplitCol,
-  SplitLayout,
-  usePlatform,
-} from "@vkontakte/vkui";
+import { IOption, GetGroupsResponse, FilterOptions } from "../../utils/types";
+import { View, Panel, AppRoot, SplitCol, SplitLayout } from "@vkontakte/vkui";
 import "@vkontakte/vkui/dist/vkui.css";
-import {
-  filterByAvatar,
-  filterByFriends,
-  filterByGoupType,
-  findDistinctAvatarColors,
-} from "../../utils/utils";
+import { findDistinctAvatarColors } from "../../utils/utils";
 import Filters from "../filters/filters";
 import Groups from "../groups/groups";
-import { useDispatch } from "../../services/hooks";
+import { useDispatch, useSelector } from "../../services/hooks";
 import { setGroups, setShownGroups } from "../../services/reducers/groups";
+import fakeApi from "../../utils/fakeApi";
+import { setFilters } from "../../services/actions/groups";
 
 const App = () => {
   const dispatch = useDispatch();
   const testData: GetGroupsResponse = { result: 1, data: mockData };
+  const filters = useSelector((store) => store.groups.filters);
+  const groups = useSelector((store) => store.groups.groups);
+
   const colors: IOption[] = testData?.data
     ? findDistinctAvatarColors(testData?.data)
     : [];
@@ -33,20 +24,23 @@ const App = () => {
   React.useEffect(() => {
     console.log(testData);
     console.log(colors);
-    dispatch(setShownGroups(testData?.data || []));
-    dispatch(setGroups(testData?.data || []));
+    fakeApi.getGroups().then((res) => {
+      dispatch(setShownGroups(res?.data || []));
+      dispatch(setGroups(res?.data || []));
+    });
   }, []);
 
-  function handleChaningGroupTypeFilter(type: string) {
-    dispatch(setShownGroups(filterByGoupType(type, testData?.data || [])));
-  }
+  function handleChaningFilter(
+    type: string,
+    optionName: "type" | "friends" | "avatarColor"
+  ) {
+    console.log(type, optionName);
 
-  function handleChangingAvatarFilter(type: string) {
-    dispatch(setShownGroups(filterByAvatar(type, testData?.data || [])));
-  }
+    const optionsObj: FilterOptions = JSON.parse(JSON.stringify(filters));
+    optionsObj[optionName] = type;
 
-  function handleChangingFriendsFilter(type: string) {
-    dispatch(setShownGroups(filterByFriends(type, testData?.data || [])));
+    console.log(optionsObj);
+    dispatch(setFilters(groups, optionsObj));
   }
 
   return (
@@ -62,11 +56,7 @@ const App = () => {
         <SplitCol>
           <View activePanel="main">
             <Panel id="main">
-              <Filters
-                handleChaningGroupTypeFilter={handleChaningGroupTypeFilter}
-                handleChangingAvatarFilter={handleChangingAvatarFilter}
-                handleChangingFriendsFilter={handleChangingFriendsFilter}
-              />
+              <Filters handleChaningFilter={handleChaningFilter} />
               <Groups groups={testData?.data || []} />
             </Panel>
           </View>

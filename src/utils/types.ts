@@ -21,3 +21,9 @@ export interface IOption {
   eng: string;
   rus: string;
 }
+
+export type FilterOptions = {
+  type?: string;
+  friends?: string;
+  avatarColor?: string;
+};

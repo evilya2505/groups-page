@@ -1,4 +1,4 @@
-import { IOption, IGroup } from "./types";
+import { IOption, IGroup, FilterOptions } from "./types";
 import { colors } from "./constants";
 
 export function findDistinctAvatarColors(data: IGroup[]): IOption[] {
@@ -30,39 +30,37 @@ export function defineSuffix(num: number): string {
   return result;
 }
 
-export function filterByGoupType(type: string, data: IGroup[]): IGroup[] {
-  if (type === "any") return data;
-  const result: IGroup[] = [];
-  const closed: boolean = type === "closed" ? true : false;
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].closed === closed) result.push(data[i]);
+export function defineSuffixFriends(num: number): string {
+  let result: string = "друга";
+  const lastDigital: number = num % 10;
+  if (lastDigital >= 5 || lastDigital === 0) {
+    result = "друзей";
   }
+
+  if (lastDigital === 1) result = "друг";
 
   return result;
 }
 
-export function filterByFriends(type: string, data: IGroup[]): IGroup[] {
-  if (type === "any") return data;
-  const result: IGroup[] = [];
-  const isFriends = type === "yes" ? true : false;
-  for (let i = 0; i < data.length; i++) {
-    if (isFriends) {
-      if (data[i]?.friends) result.push(data[i]);
-    } else {
-      if (!data[i]?.friends) result.push(data[i]);
-    }
-  }
+export function filterGroups(data: IGroup[], options: FilterOptions): IGroup[] {
+  return data.filter((group) => {
+    const meetsTypeCriteria =
+      options.type === "any" ||
+      options.type === undefined ||
+      (options.type === "closed" ? group.closed : !group.closed);
+    const meetsFriendsCriteria =
+      options.friends === "any" ||
+      options.friends === undefined ||
+      (options.friends === "yes"
+        ? group.friends
+        : options.friends === "no"
+        ? !group.friends
+        : true);
+    const meetsAvatarCriteria =
+      options.avatarColor === "any" ||
+      options.avatarColor === undefined ||
+      group.avatar_color === options.avatarColor;
 
-  return result;
-}
-
-export function filterByAvatar(type: string, data: IGroup[]): IGroup[] {
-  if (type === "any") return data;
-  const result: IGroup[] = [];
-
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].avatar_color === type) result.push(data[i]);
-  }
-
-  return result;
+    return meetsTypeCriteria && meetsFriendsCriteria && meetsAvatarCriteria;
+  });
 }
