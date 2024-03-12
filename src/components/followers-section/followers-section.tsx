@@ -24,9 +24,9 @@ const FollowersSection: React.FC<IFollowerSectionProps> = ({
   const dispatch = useDispatch();
 
   function onFriendsClick() {
-    dispatch(setOpening(true));
     dispatch(setGroupName(groupName));
     dispatch(setCurrentFriends(friends || []));
+    dispatch(setOpening(true));
   }
 
   function generatePhotosArr() {

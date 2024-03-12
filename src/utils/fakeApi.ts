@@ -11,7 +11,7 @@ const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 class FakeApi {
   async _getRequestResult<T>(data: T): Promise<T> {
     await delay(1000); // Имитация задержки сети
-    return data; // Возвращаем данные
+    return data;
   }
 
   async getGroups(): Promise<GetGroupsResponse> {

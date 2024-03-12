@@ -2,45 +2,39 @@ import { IOption, IGroup, FilterOptions } from "./types";
 import { colors } from "./constants";
 
 export function findDistinctAvatarColors(data: IGroup[]): IOption[] {
-  const distinctColors: string[] = [];
-  for (let i = 0; i < data.length; i++) {
-    const color: string = data[i].avatar_color || "";
-    if (!distinctColors.includes(color) && color !== "") {
-      distinctColors.push(color);
-    }
+  const distinctColors = new Set(
+    data.map((group) => group.avatar_color).filter((color) => color)
+  );
+
+  return colors.filter((color) => distinctColors.has(color.value));
+}
+
+function getRussianPluralForm(num: number, forms: string[]): string {
+  const lastDigit = num % 10;
+  const lastTwoDigits = num % 100;
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
+    return forms[2];
   }
 
-  const distinctColorsObj: IOption[] = [];
-
-  for (let i = 0; i < distinctColors.length; i++) {
-    for (let j = 0; j < colors.length; j++) {
-      if (distinctColors[i] === colors[j].value)
-        distinctColorsObj.push(colors[j]);
-    }
+  switch (lastDigit) {
+    case 1:
+      return forms[0];
+    case 2:
+    case 3:
+    case 4:
+      return forms[1];
+    default:
+      return forms[2];
   }
-  return distinctColorsObj;
 }
 
 export function defineSuffix(num: number): string {
-  let result: string = "участника";
-  const lastDigital: number = num % 10;
-  if (lastDigital >= 5 || lastDigital === 0) {
-    result = "участников";
-  }
-
-  return result;
+  return getRussianPluralForm(num, ["участник", "участника", "участников"]);
 }
 
 export function defineSuffixFriends(num: number): string {
-  let result: string = "друга";
-  const lastDigital: number = num % 10;
-  if (lastDigital >= 5 || lastDigital === 0) {
-    result = "друзей";
-  }
-
-  if (lastDigital === 1) result = "друг";
-
-  return result;
+  return getRussianPluralForm(num, ["друг", "друга", "друзей"]);
 }
 
 export function filterGroups(data: IGroup[], options: FilterOptions): IGroup[] {
