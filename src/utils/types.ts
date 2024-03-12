@@ -18,8 +18,8 @@ export interface User {
 }
 
 export interface IOption {
-  eng: string;
-  rus: string;
+  value: string;
+  label: string;
 }
 
 export type FilterOptions = {
@@ -27,3 +27,5 @@ export type FilterOptions = {
   friends?: string;
   avatarColor?: string;
 };
+
+export type OptionsTypes = "type" | "friends" | "avatarColor";

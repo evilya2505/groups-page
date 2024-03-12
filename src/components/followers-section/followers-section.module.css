@@ -3,6 +3,7 @@
   background-color: transparent;
   font-size: 13px;
   margin: 0px;
+  padding: 0px 5px 0 0;
   cursor: pointer;
 }
 
@@ -11,6 +12,19 @@
 }
 
 .text {
-  font-size: 13px;
-  margin: 0px;
+  font-size: var(--vkui--font_footnote--font_size--regular);
+  color: var(--vkui--color_text_secondary);
+}
+
+.infoCell {
+  margin: 0;
+  padding: 0;
+}
+
+.usersStack {
+  cursor: pointer;
+}
+
+.textContainer {
+  display: flex;
 }

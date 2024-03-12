@@ -1,41 +1,45 @@
-import { FixedLayout, FormLayoutGroup, Group, SplitCol } from "@vkontakte/vkui";
+import { FormLayoutGroup, Group } from "@vkontakte/vkui";
 import { colors, FRIENDS_OPTION, GROUPS_OPTION } from "../../utils/constants";
 import Filter from "../filter/filter";
-import { FilterOptions } from "../../utils/types";
+import React from "react";
 
-interface IFiltersProps {
-  handleChaningFilter: (
-    type: string,
-    optionName: "type" | "friends" | "avatarColor"
-  ) => void;
-}
+interface IFiltersProps {}
 
-const Filters: React.FC<IFiltersProps> = ({
-  handleChaningFilter,
-}: IFiltersProps): JSX.Element => {
+const Filters: React.FC<IFiltersProps> = (): JSX.Element => {
+  const [width, setWidth] = React.useState(window.innerWidth);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <Group>
-      <FormLayoutGroup mode="horizontal">
+      <FormLayoutGroup mode={width <= 600 ? "vertical" : "horizontal"}>
         <Filter
           title="Выберите цвет аватарки"
           id="avatarColor"
           data={colors}
           initialState={"any"}
-          onChange={handleChaningFilter}
         />
         <Filter
           title="Выберите тип группы"
           id="type"
           data={GROUPS_OPTION}
           initialState={"any"}
-          onChange={handleChaningFilter}
         />
         <Filter
           title="Наличие друзей в группе"
           id="friends"
           data={FRIENDS_OPTION}
           initialState={"any"}
-          onChange={handleChaningFilter}
         />
       </FormLayoutGroup>
     </Group>

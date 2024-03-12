@@ -1,63 +1,38 @@
 import React from "react";
-import mockData from "../../utils/groups.json";
-import { IOption, GetGroupsResponse, FilterOptions } from "../../utils/types";
+import { FilterOptions } from "../../utils/types";
 import { View, Panel, AppRoot, SplitCol, SplitLayout } from "@vkontakte/vkui";
 import "@vkontakte/vkui/dist/vkui.css";
-import { findDistinctAvatarColors } from "../../utils/utils";
 import Filters from "../filters/filters";
 import Groups from "../groups/groups";
 import { useDispatch, useSelector } from "../../services/hooks";
-import { setGroups, setShownGroups } from "../../services/reducers/groups";
-import fakeApi from "../../utils/fakeApi";
 import { setFilters } from "../../services/actions/groups";
+import { useSearchParams } from "react-router-dom";
+import appStyles from "./app.module.css";
+import Modal from "../../modal/modal";
 
 const App = () => {
   const dispatch = useDispatch();
-  const testData: GetGroupsResponse = { result: 1, data: mockData };
-  const filters = useSelector((store) => store.groups.filters);
   const groups = useSelector((store) => store.groups.groups);
-
-  const colors: IOption[] = testData?.data
-    ? findDistinctAvatarColors(testData?.data)
-    : [];
+  const [searchParams] = useSearchParams();
 
   React.useEffect(() => {
-    console.log(testData);
-    console.log(colors);
-    fakeApi.getGroups().then((res) => {
-      dispatch(setShownGroups(res?.data || []));
-      dispatch(setGroups(res?.data || []));
-    });
-  }, []);
+    const optionObj: FilterOptions = {};
 
-  function handleChaningFilter(
-    type: string,
-    optionName: "type" | "friends" | "avatarColor"
-  ) {
-    console.log(type, optionName);
+    optionObj.type = searchParams.get("type") || "any";
+    optionObj.friends = searchParams.get("friends") || "any";
+    optionObj.avatarColor = searchParams.get("avatarColor") || "any";
 
-    const optionsObj: FilterOptions = JSON.parse(JSON.stringify(filters));
-    optionsObj[optionName] = type;
-
-    console.log(optionsObj);
-    dispatch(setFilters(groups, optionsObj));
-  }
+    dispatch(setFilters(optionObj));
+  }, [searchParams, dispatch, groups]);
 
   return (
     <AppRoot>
-      <SplitLayout
-        style={{
-          justifyContent: "center",
-          margin: "0 auto",
-          maxWidth: "1200px",
-          padding: "10px",
-        }}
-      >
+      <SplitLayout className={appStyles.app} modal={<Modal />}>
         <SplitCol>
           <View activePanel="main">
             <Panel id="main">
-              <Filters handleChaningFilter={handleChaningFilter} />
-              <Groups groups={testData?.data || []} />
+              <Filters />
+              <Groups />
             </Panel>
           </View>
         </SplitCol>

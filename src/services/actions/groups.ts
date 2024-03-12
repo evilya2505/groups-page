@@ -1,5 +1,5 @@
 import fakeApi from "../../utils/fakeApi";
-import { FilterOptions, IGroup } from "../../utils/types";
+import { FilterOptions } from "../../utils/types";
 import {
   requestFailed,
   setFiltersRequest,
@@ -7,14 +7,17 @@ import {
 } from "../reducers/groups";
 import { AppDispatch } from "../store";
 
-export const setFilters = (groups: IGroup[], filters: FilterOptions) => {
+export const setFilters = (filters: FilterOptions) => {
   return function (dispatch: AppDispatch) {
     dispatch(setFiltersRequest());
 
     fakeApi
-      .getFilteredData(groups, filters)
+      .getFilteredData(filters)
       .then((data) => {
-        if (data.result === 0) dispatch(requestFailed());
+        if (data.result === 0) {
+          dispatch(requestFailed());
+          return 0;
+        }
         dispatch(
           setFiltersSuccess({ groups: data?.data || [], filters: filters })
         );

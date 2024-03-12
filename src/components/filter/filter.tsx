@@ -1,16 +1,13 @@
-import { FormItem, NativeSelect } from "@vkontakte/vkui";
-import { FilterOptions, IOption } from "../../utils/types";
-import { ChangeEventHandler } from "react";
+import { CustomSelectOption, FormItem, Select } from "@vkontakte/vkui";
+import { IOption, OptionsTypes } from "../../utils/types";
 import React from "react";
+import { useSearchParams } from "react-router-dom";
+import { useSelector } from "../../services/hooks";
 
 interface IFilterProps {
   title: string;
-  id: "type" | "friends" | "avatarColor";
+  id: OptionsTypes;
   data: IOption[];
-  onChange: (
-    type: string,
-    optionName: "type" | "friends" | "avatarColor"
-  ) => void;
   initialState: string;
 }
 
@@ -19,35 +16,36 @@ const Filter: React.FC<IFilterProps> = ({
   title,
   id,
   initialState,
-  onChange,
 }: IFilterProps): JSX.Element => {
-  const [value, setValue] = React.useState(initialState);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isLoading = useSelector((store) => store.groups.request);
+  const [value, setValue] = React.useState(
+    searchParams.get(id) || initialState
+  );
 
   React.useEffect(() => {
-    onChange(value, id);
-  }, [value, id]);
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set(id, value);
+
+    setSearchParams(newSearchParams);
+  }, [value, id, searchParams, setSearchParams]);
 
   function onFilterChange(newValue: string) {
     setValue(newValue);
   }
+
   return (
     <FormItem top={title} htmlFor={id}>
-      <NativeSelect
+      <Select
         id={id}
         value={value}
+        options={data}
         onChange={(e) => onFilterChange(e.target.value)}
-      >
-        <option key="-1" value="any">
-          Любой
-        </option>
-        {data.map((option, index) => {
-          return (
-            <option key={index} value={option.eng}>
-              {option.rus}
-            </option>
-          );
-        })}
-      </NativeSelect>
+        disabled={isLoading}
+        renderOption={({ option, ...restProps }) => (
+          <CustomSelectOption {...restProps} key={option.value} />
+        )}
+      />
     </FormItem>
   );
 };

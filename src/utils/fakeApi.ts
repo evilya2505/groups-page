@@ -21,13 +21,10 @@ class FakeApi {
     });
   }
 
-  getFilteredData(
-    data: IGroup[],
-    filters: FilterOptions
-  ): Promise<GetGroupsResponse> {
+  getFilteredData(filters: FilterOptions): Promise<GetGroupsResponse> {
     return this._getRequestResult({
       result: 1,
-      data: filterGroups(data, filters) as IGroup[],
+      data: filterGroups(fakeDatabase.groups, filters) as IGroup[],
     });
   }
 }

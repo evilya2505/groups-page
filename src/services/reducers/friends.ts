@@ -3,10 +3,14 @@ import { User } from "../../utils/types";
 
 export interface TFriendsListState {
   currentFriends: User[];
+  groupName: string;
+  isOpen: boolean;
 }
 
 export const initialState: TFriendsListState = {
   currentFriends: [],
+  groupName: "",
+  isOpen: false,
 };
 
 const friendsSlice = createSlice({
@@ -14,11 +18,17 @@ const friendsSlice = createSlice({
   initialState,
   reducers: {
     setCurrentFriends(state: TFriendsListState, action: PayloadAction<User[]>) {
-      console.log("in reducer friends");
       state.currentFriends = action.payload;
+    },
+    setOpening(state: TFriendsListState, action: PayloadAction<boolean>) {
+      state.isOpen = action.payload;
+    },
+    setGroupName(state: TFriendsListState, action: PayloadAction<string>) {
+      state.groupName = action.payload;
     },
   },
 });
-export const { setCurrentFriends } = friendsSlice.actions;
+export const { setCurrentFriends, setOpening, setGroupName } =
+  friendsSlice.actions;
 
 export default friendsSlice.reducer;

@@ -2,53 +2,65 @@ import { IOption } from "./types";
 
 export const colors: IOption[] = [
   {
-    eng: "red",
-    rus: "Красный",
+    value: "any",
+    label: "Все",
   },
   {
-    eng: "green",
-    rus: "Зеленый",
+    value: "red",
+    label: "Красный",
   },
   {
-    eng: "yellow",
-    rus: "Желтый",
+    value: "green",
+    label: "Зеленый",
   },
   {
-    eng: "blue",
-    rus: "Синий",
+    value: "yellow",
+    label: "Желтый",
   },
   {
-    eng: "purple",
-    rus: "Фиолетовый",
+    value: "blue",
+    label: "Синий",
   },
   {
-    eng: "white",
-    rus: "Белый",
+    value: "purple",
+    label: "Фиолетовый",
   },
   {
-    eng: "orange",
-    rus: "Оранжевый",
+    value: "white",
+    label: "Белый",
+  },
+  {
+    value: "orange",
+    label: "Оранжевый",
   },
 ];
 
 export const GROUPS_OPTION: IOption[] = [
   {
-    eng: "closed",
-    rus: "Закрытая",
+    value: "any",
+    label: "Все",
   },
   {
-    eng: "open",
-    rus: "Открытая",
+    value: "closed",
+    label: "Закрытая",
+  },
+  {
+    value: "open",
+    label: "Открытая",
   },
 ];
 
 export const FRIENDS_OPTION: IOption[] = [
   {
-    eng: "yes",
-    rus: "Да",
+    value: "any",
+    label: "Все",
   },
   {
-    eng: "no",
-    rus: "Нет",
+    value: "yes",
+    label: "Да",
+  },
+  {
+    value: "no",
+    label: "Нет",
   },
 ];

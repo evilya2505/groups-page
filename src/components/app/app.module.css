@@ -1,7 +1,18 @@
-.App {
-    text-align: center;
+.app {
+  justify-content: center;
+  margin: 0 auto;
+  padding: 10px;
+  max-width: 1000px;
 }
-  
-.main {
-    max-width: 1400px;
+
+@media screen and (max-width: 1200px) {
+  .app {
+    max-width: 800px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .app {
+    max-width: 600px;
+  }
 }

@@ -14,7 +14,8 @@ export function findDistinctAvatarColors(data: IGroup[]): IOption[] {
 
   for (let i = 0; i < distinctColors.length; i++) {
     for (let j = 0; j < colors.length; j++) {
-      if (distinctColors[i] == colors[j].eng) distinctColorsObj.push(colors[j]);
+      if (distinctColors[i] === colors[j].value)
+        distinctColorsObj.push(colors[j]);
     }
   }
   return distinctColorsObj;
@@ -23,7 +24,7 @@ export function findDistinctAvatarColors(data: IGroup[]): IOption[] {
 export function defineSuffix(num: number): string {
   let result: string = "участника";
   const lastDigital: number = num % 10;
-  if (lastDigital >= 5 || lastDigital == 0) {
+  if (lastDigital >= 5 || lastDigital === 0) {
     result = "участников";
   }
 
